@@ -90,6 +90,7 @@ local db = {}
 		local checks = self.list[id]
 		local canproceed = false
 		if checks == nil then
+			self.list[id] = 0 --for edge cases
 			checks = 0 --make into number so incrementation doesn't error
 			canproceed = true
 		elseif checks < self.maxrequestsperid then
@@ -100,7 +101,9 @@ local db = {}
 		--spawn reset thread to wait a specific duration of time, then reset
 		--list for this specific debouncer object
 		--or do nothing if resetting is disabled
-		self.list[id] = checks
+		if self.list[id] ~= nil then --if was nil before, should have become 0
+			self.list[id] = checks
+		end
 		self:spawnresetthread()
 		return canproceed
 	end
